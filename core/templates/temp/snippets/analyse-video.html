@@ -1,0 +1,10 @@
+<form class='form-video-ajax' method='POST' action="{% url 'analyse' id=video_id %}" class="form"> {% csrf_token %}
+    <input class='video-id' type='hidden' name='video_id' value='{{ video_id }}' />
+
+    {% if video_id.classified %}
+        <button type="submit" class='btn btn-success'>View</button>
+        
+    {% else %}
+        <button type='submit'  class='btn btn-success'>Detect</button>
+    {% endif %}
+</form>

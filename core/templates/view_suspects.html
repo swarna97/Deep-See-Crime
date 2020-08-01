@@ -1,0 +1,178 @@
+
+              {% extends 'layouts/base.html' %}
+              {% load static %}
+              {% block title %} Maps {% endblock %}
+
+              <!-- Specific Page CSS goes HERE  -->
+              {% block stylesheets %}{% endblock stylesheets %}
+
+              {% block content %}
+                  <head>
+                      <meta name="viewport" content="width=device-width, initial-scale=1">
+                      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+                      <style>
+                      * {
+                        box-sizing: border-box;
+                      }
+
+                      body {
+                        font-family: Arial, Helvetica, sans-serif;
+                      }
+
+                      /* Float two columns side by side */
+                      .column {
+                        float: center;
+                        width: 15%;
+                        padding-top: 20px ;
+                        /* padding-right: 10px; */ 
+    
+                      }
+
+                      /* Remove extra left and right margins, due to padding */
+                      .row {margin: 0 -5px;}
+
+                      /* Clear floats after the columns */
+                      .row:after {
+                        content: "";
+                        display: table;
+                        clear: both;
+                      }
+
+                      /* Responsive columns */
+                      @media screen and (max-width: 600px) {
+                        .column {
+                          width: 100%;
+                          display: block;
+                          margin-bottom: 20px;
+                        }
+                      }
+
+                      /* Style the counter cards */
+                      .card {
+                        box-shadow: 0 4px 8px 0 rgba(198, 74, 247, 0.2);
+                        padding: 1px;
+                        text-align: center;
+                        background-color: #f1f1f1;
+                        font-size: 20px;
+
+                      }
+                      
+            #preloader {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+            #loader {
+                display: block;
+                position: relative;
+                left: 50%;
+                top: 50%;
+                width: 150px;
+                height: 150px;
+                margin: -75px 0 0 -75px;
+                border-radius: 50%;
+                border: 3px solid transparent;
+                border-top-color: #9370DB;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+            #loader:before {
+                content: "";
+                position: absolute;
+                top: 5px;
+                left: 5px;
+                right: 5px;
+                bottom: 5px;
+                border-radius: 50%;
+                border: 3px solid transparent;
+                border-top-color: #BA55D3;
+                -webkit-animation: spin 3s linear infinite;
+                animation: spin 3s linear infinite;
+            }
+            #loader:after {
+                content: "";
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+                border-radius: 50%;
+                border: 3px solid transparent;
+                border-top-color: #209274;
+                -webkit-animation: spin 1.5s linear infinite;
+                animation: spin 1.5s linear infinite;
+            }
+            @-webkit-keyframes spin {
+                0%   {
+                    -webkit-transform: rotate(0deg);
+                    -ms-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    -ms-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes spin {
+                0%   {
+                    -webkit-transform: rotate(0deg);
+                    -ms-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    -ms-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+
+        <script type="text/javascript">
+          function Login() {
+          document.getElementById("mainDiv").style.visibility = 'hidden';
+          document.getElementById("loading").style.visibility = 'visible';
+          // location = "https://youtube.com";
+        };
+      </script>
+              </head>
+              <body>
+              <div class="container" id='mainDiv'><br>
+                <center>
+               <button class="btn btn-primary btn-lg">Suspects Details</button>
+</center>
+
+                <br>
+
+                <div class="row">
+                  {% for suspect in suspects %}
+                <div class="column">
+                  <!-- <div class="card">
+                  <div class="card-body"> -->
+                    <a href="{% url 'onesuspect' id=suspect.id %} " onclick="Login();">
+                  <img src="{{suspect.image.url}}" style="width:80%;height:180px" alt="...">
+                  </a>
+                    <!-- <div class="w3-container w3-center">
+                       <h4 style="color:dodgerblue"><b>{{i.name}}</b></h4> -->
+                      <!-- <form class='form-video-ajax' method='POST' action="{% url 'onesuspect' id=suspect.id %}" class="form"> {% csrf_token %}
+                          <button class="btn btn-success btn-lg" type=submit >Suspect Details</button>
+                    </form> -->
+                  </div>
+                  <!-- </div>
+                  </div> -->
+
+                {% endfor %}
+                </div>
+        <span id="loading" style="visibility: hidden; text-align: center;">
+        <div id="preloader">
+          <div id="loader"></div>
+        </div>
+      </span>
+            </div>
+
+
+              </body>
+
+              {% endblock content %}

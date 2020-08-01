@@ -1,0 +1,109 @@
+{% extends "layouts/landing.html" %}
+
+{% block title %} Login {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+        <div class="row">
+  <div class="col-md-6" style="padding-top:70px; padding-bottom: 70px;">
+ <div class="owl-carousel owl-theme " style="width:100%; height:700">
+                        <img src="/static/assets/img/undraw_authentication_fsn5.svg" alt="" class="login_img">
+                        <img src="/static/assets/img/undraw_personal_data_29co.svg" alt="" class="login_img">
+                        <img src="/static/assets/img/undraw_fingerprint_swrc.svg" alt="" class="login_img">
+                    </div>
+
+            </div>
+          <div class="col-md-5" style="padding-top:150px">
+        <!-- <h1 style="padding-left:500px">DEEP SEE CRIME</h1> -->
+            <div class="card" style="padding-left: 20px;">
+
+              
+
+              <form role="form" method="post" action="">
+
+                {% csrf_token %}
+
+                <div class="card-header">
+                  <h1 >LOGIN</h1>
+
+                  <h6 class="card-category">
+                      {% if msg %}
+                        <span class="text-danger">{{ msg }}</span>
+                      {% else %}
+
+                        
+            
+
+                      {% endif %}
+                  </h6>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-5 px-md-3">
+                        <div class="form-group">
+                          <h4>Username</h4>
+                          {{ form.username }}
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-5 px-md-3">
+                        <div class="form-group">
+                          <h5>Password</h5>
+                          {{ form.password }}
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
+                  &nbsp; &nbsp;
+                  Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
+                </div>
+
+              </form>
+
+
+          </div>
+
+          <!-- <div class="col-md-6" >
+                      <center><img style="height:300px; padding-top:100px" src="/static/assets/img/DSC_logo.gif" alt="" class="login_img">    </center>
+               </div> -->
+         
+               <!-- <div style="padding-top:10px" >
+                <h3 >With &hearts; CODE MONK</h3>
+                  <h5 >FOR</h5>
+                  <h3 >Government of Madhya Pradhesh</h3>
+    </div> -->
+ </div>
+
+      </div>
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+ <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+        integrity="sha256-pTxD+DSzIwmwhOqTFN+DB+nHjO4iAsbgfyFq5K5bcE0=" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                autoplay: true,
+                autoplayTimeout: 2000,
+                autoplayHoverPause: true,
+                items: 1
+            });
+        });
+    </script>
+{% endblock javascripts %}

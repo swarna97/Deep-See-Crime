@@ -1,0 +1,78 @@
+
+
+    <div class="sidebar">
+      <div class="sidebar-wrapper">
+       <!--  
+        <div class="logo">
+          <a target="_blank" href="" class="simple-text logo-mini">
+            DSC
+          </a>
+          <a target="_blank" href="" class="simple-text logo-normal">
+            DeepSeeCrime
+          </a>
+        </div> -->
+
+        {% if user.is_authenticated %}
+        <ul class="nav">
+          <li>
+            <a href="/">
+              <i class="tim-icons icon-chart-pie-36" style="color: rgb(39, 41, 61);"></i>
+              <b><p>Dashboard</p><b>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html">
+                <i class="tim-icons icon-puzzle-10" style="color: rgb(39, 41, 61);"></i>
+                <p >CRIME BASED RETRIEVAL</p> 
+                
+              </a>
+          </li>
+       
+          <li>
+            <a href="/ui-maps.html">
+              <i class="tim-icons icon-pin" style="color: rgb(39, 41, 61);"></i>
+            
+              <b><p>Maps Based Retrieval</p><b></b>
+            </a>
+          </li>
+  
+          <li>
+            <a href="/ui-notifications.html">
+              <i class="tim-icons icon-bell-55" style="color: rgb(39, 41, 61);"></i>
+              <p>Notifications</p>
+            </a>
+          </li>
+
+         
+          <li>
+            <a href="{% url 'view-suspects' %}">
+              <i class="tim-icons icon-align-center" style="color: rgb(39, 41, 61);"></i>
+              <p>View Suspects</p>
+            </a>
+          </li>
+
+        
+          <li>
+            <a href="/page-user.html">
+              <i class="tim-icons icon-single-02" style="color: rgb(39, 41, 61);"></i>
+              <p>User Profile</p>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'logout' %}" >
+              <i class="tim-icons icon-user-run" style="color: rgb(39, 41, 61);"></i>
+              <p>Logout</p>
+            </a>
+          </li>
+
+          <!-- <li class="active-pro">
+            <a target="_blank" href="https://appseed.us/admin-dashboards/django-dashboard-black">
+              <i class="tim-icons icon-spaceship"></i>
+              <p>See product</p>
+            </a>
+          </li> -->
+        </ul>
+        {% endif %}
+        
+      </div>
+    </div>
