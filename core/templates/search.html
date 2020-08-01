@@ -1,0 +1,117 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Search {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Float two columns side by side */
+    .column {
+      float: left;
+      width: 25%;
+      padding: 10px 20px;
+    }
+
+    /* Remove extra left and right margins, due to padding */
+    .row {margin: 0 -5px;}
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* Responsive columns */
+    @media screen and (max-width: 600px) {
+      .column {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+      }
+    }
+
+    /* Style the counter cards */
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(198, 74, 247, 0.2);
+      padding: 1px;
+      text-align: center;
+      background-color: #f1f1f1;
+      font-size: 20px;
+
+    }
+
+    </style>
+    <script>
+        $(document).ready(function(){
+      //Auto Search
+      var searchForm = $(".search-form")
+      var searchInput = searchForm.find("[name='q']") // input name='q'
+      var typingTimer;
+      var typingInterval = 500 // .5 seconds
+      var searchBtn = searchForm.find("[type='submit']")
+      searchInput.keyup(function(event){
+        // key released
+        console.log(event)
+        clearTimeout(typingTimer)
+
+        typingTimer = setTimeout(perfomSearch, typingInterval)
+      })
+
+      searchInput.keydown(function(event){
+        // key pressed
+        clearTimeout(typingTimer)
+      })
+
+      function displaySearching(){
+        searchBtn.addClass("disabled")
+        searchBtn.html("<i class='fa fa-spin fa-spinner'></i> Searching...")
+      }
+
+      function perfomSearch(){
+        displaySearching()
+        var query = searchInput.val()
+        setTimeout(function(){
+          window.location.href='/search/?q=' + query
+        }, 500)
+
+      }
+    })
+
+    </script>
+</head>
+<body>
+<div class="container"><br>
+<div class="card" style="background-color:rgb(217 80 212)">
+  <div class="card-body">
+    <h3 style="color:12476d">
+      Results For : {{query}}<br>
+       </h3>
+     </div>
+</div>
+<div class="row">
+    {% for i in object_list %}
+    <div class="column">
+        <video name="video_content" controls autoplay style="width:100%" ><source src="{{i.video.url}}" type="video/mp4"></video>
+        <div class="w3-container w3-center">
+          {% include 'temp/snippets/analyse-video.html' with video_id=i %}
+        </div>
+  </div>
+    {% endfor %}
+</div>
+</div>
+</body>
+{% endblock content %}
