@@ -1,8 +1,4 @@
-# -*- encoding: utf-8 -*-
-"""
-License: MIT
-Copyright (c) 2019 - present AppSeed.us
-"""
+
 from django.db import models
 import random
 import os
@@ -12,10 +8,19 @@ from django.contrib.auth.models import User
 from jsonfield import JSONField
 
 # Create your models here.
-class Camera(models.Model):
+class Hotspot(models.Model):
     name = models.CharField(max_length=120, unique=True)
     place = models.CharField(max_length=120)
 
+    def __str__(self):
+        return str(self.id)
+
+
+class Camera(models.Model):
+    hotspot = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=120, unique=True)
+    place = models.CharField(max_length=120)
     def __str__(self):
         return str(self.id)
 
@@ -60,6 +65,20 @@ class Suspect(models.Model):
     query = models.IntegerField(default=1, null=True,unique=True)
     query_img = models.ImageField(upload_to="img/",null=True,blank=True)
 
+
+    def __str__(self):
+        return str(self.id)
+
+
+class User(models.Model):
+
+    camera = models.ForeignKey(Video, null=True, blank=True, on_delete=models.CASCADE)
+    is_admin = models.BooleanField(max_length=120,default=False)
+    name =  models.CharField(max_length=120,default="None", unique=True)
+    designation = models.CharField(max_length=120,default="None")
+    department = models.CharField(max_length=120,default="None")
+    mail = models.CharField(max_length=120,default="None")
+    mobile = models.CharField(max_length=120,default="None")
 
     def __str__(self):
         return str(self.id)

@@ -33,15 +33,42 @@
   function initMap() {
     // Javascript method's body can be found in assets/js/demos.js
     // demo.initGoogleMaps();
-    var locations = [
-      ['Raisen', 23.3327, 77.7824, 1, '{% url "view" id="1" %}'],
-      ['Bhojpur', 25.4662, 84.5222, 2, '{% url "view" id="2" %}'],
-      ['Sehore', 23.2032, 77.0844, 3, '{% url "view" id="3" %}'],
-      ['Kurawar', 23.5114, 77.0247, 4, '{% url "view" id="4" %}'],
-      ['Berasia', 23.6279, 77.4314, 5, '{% url "view" id="5" %}'],
-      ['Vidisha', 23.5236, 77.8140,6, '{% url "view" id="5" %}'],
+    // var locations = [
+
+    //   // ['Raisen', 25.3327, 77.7824, 1, '{% url "view" id="1" %}'],
+    //   ['Bhojpur', 25.4662, 84.5222, 2, '{% url "view" id="2" %}'],
+    //   ['Sehore', 23.2032, 77.0844, 3, '{% url "view" id="3" %}'],
+    //   ['Kurawar', 23.5114, 77.0247, 4, '{% url "view" id="4" %}'],
+    //   ['Berasia', 23.6279, 77.4314, 5, '{% url "view" id="5" %}'],
+    //   ['Vidisha', 23.5236, 77.8140,6, '{% url "view" id="6" %}'],
+    //   ['Bhopal', 23.2599, 77.4126, 7, '{% url "view" id="7" %}'],
+    //   ['Bhopal', 23.2599, 74.4126, 7, '{% url "view" id="7" %}'],
+    //   ['Van Vihar', 23.35, 77.49, 7, '{% url "view" id="8" %}'],
+    //   ['Bhel', 23.40, 77.47, 7, '{% url "view" id="7" %}'],
+    //   ['Raisen', 23.27, 77.44, 7, '{% url "view" id="7" %}'],
+    //   ['Van Vihar', 23.29, 77.67, 7, '{% url "view" id="7" %}'],
+    //   ['Bhel', 23.31, 77.47, 7, '{% url "view" id="7" %}'],
+    //   ['Raisen', 23.24, 77.4126, 7, '{% url "view" id="7" %}'],
+    //   ['Raisen', 23.24, 67.4126, 7, '{% url "view" id="7" %}'],
+    //   ['Raisen', 23.24, 74.4126, 7, '{% url "view" id="7" %}'],
+    //   ['Chopra Kalan', 23.3200, 77.4573, 1, '{% url "view" id="1" %}'],
       
-    ];
+    // ];
+
+   var locations = [
+      ['Bhopal', 23.2599,  77.4126, 1, '{% url "view" id="1" %}' ],
+      ['Meerpur', 23.2765, 77.3009, 2, '{% url "view" id="2" %}'],
+      ['Arera Colony', 23.2116,  77.4311, 3, '{% url "view" id="3" %}'],
+      ['Bhauri', 23.2816, 77.2736, 4, '{% url "view" id="4" %}'],
+      ['Lambakheda', 23.3266, 77.4035, 5, '{% url "view" id="5" %}'],
+      ['Maharana', 23.2313, 77.4326, 6, '{% url "view" id="6" %}'],
+      ['Chopra Kalan', 23.3200,77.4573, 1, '{% url "view" id="1" %}'],
+      ['Bhopal Railway factory',  23.2825,77.4286, 8, '{% url "view" id="8" %}'],
+      ['Taj Masajid', 23.2630,77.3928, 9, '{% url "view" id="9" %}'],
+      ['BHEL', 23.2446,77.4730, 10, '{% url "view" id="10" %}'],
+      ['Barkheda Nathu', 23.2055,77.3267, 11, '{% url "view" id="11" %}']
+    
+    ]
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
