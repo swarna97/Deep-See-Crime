@@ -10,6 +10,12 @@ from django.urls import reverse
 import cv2
 from django.contrib import messages
 
+# Authentication
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+
 # HTTP Response
 
 from django.http import HttpResponse, JsonResponse
@@ -42,8 +48,10 @@ from .serializers import FileSerializer
 def index(request):
     return render(request, "index.html")
 
+@api_view(["POST"])
 @login_required(login_url="/login/")
 def CameraDetailView(request, id=None, *args, **kwargs):
+    permission_classes = (IsAuthenticated,)
     camera = Camera.objects.get(id=id)
     video = Video.objects.filter(camera=id)
     context={
@@ -53,6 +61,7 @@ def CameraDetailView(request, id=None, *args, **kwargs):
     }
     return render(request, "videos.html", context)
 
+@api_view(["POST"])
 @login_required(login_url="/login/")
 def suspectDetails(request, id=None, *args, **kwargs):
     video = Video.objects.get(id=id)
@@ -90,8 +99,8 @@ class SearchVideoView(ListView):
             return Video.objects.search(query)
         return Video.objects.all()
 
-
 # Module 1&2
+@api_view(["POST"])
 @login_required(login_url="/login/")
 def VideoDetailView(request, id=None, *args, **kwargs):
     
@@ -212,4 +221,3 @@ def pages(request):
 
         html_template = loader.get_template( 'error-500.html' )
         return HttpResponse(html_template.render(context, request))
-
