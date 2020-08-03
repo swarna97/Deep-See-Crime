@@ -1,31 +1,43 @@
-# -*- encoding: utf-8 -*-
-"""
-License: MIT
-Copyright (c) 2019 - present AppSeed.us
-"""
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django import template
-from django.http import HttpResponse, JsonResponse
-from .models import Camera, Video, Suspect
-from django.views.generic import ListView
 import json
 from json import dumps
 from django.db.models import Q
 from django.urls import reverse
 import cv2
+from django.contrib import messages
+
+# HTTP Response
+
+from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
+from django.views.generic import ListView
+
+
+# Django Models
+
+from .models import Camera, Video, Suspect
+
+
+# DL Scripts
 
 from .dl_scripts.anomaly_detector.anomaly_detector import *
-# from .utils import *
-# from .dl_scripts.multi_person_tracker.examples.demo_video import *
 from .dl_scripts.gvision_attributes.facedetect import *
+from .dl_scripts.Crime.classify_crime import *
 from .dl_scripts.person_reid.demo import *
 
-# @login_required(login_url="/login/")
-# def index(request):
-#     return render(request, "index.html")
+# REST API
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.parsers import FileUploadParser
+from .serializers import FileSerializer
+
+
+
 @login_required(login_url="/login/")
 def index(request):
     return render(request, "index.html")
@@ -66,7 +78,6 @@ class SearchVideoView(ListView):
         context = super(SearchVideoView, self).get_context_data(*args, **kwargs)
         query = self.request.GET.get('q')
         context['query'] = query
-        # SearchQuery.objects.create(query=query)
         return context
 
     def get_queryset(self,*args,**kwargs):
@@ -79,14 +90,46 @@ class SearchVideoView(ListView):
             return Video.objects.search(query)
         return Video.objects.all()
 
+
+# Module 1&2
+@login_required(login_url="/login/")
+def VideoDetailView(request, id=None, *args, **kwargs):
+    
+    video = Video.objects.get(id=id)
+    path =  base + str(video.video)
+    
+    
+    crop_path, duration, normal, anomaly, start = obtain_crop(path)
+    norm, anom1,anom2,anom3,anom4 = get_pred(normal, anomaly, path)
+    
+    crop_duration = duration-start
+    video.duration = crop_duration
+    video.classified = True
+    video.save()
+
+
+    xlabels = ["Normal", "Assault", "Burglary", "Abuse", "Fighting"]
+    ylabels = [norm,anom1,anom2,anom3,anom4]
+
+    json_xlabels = dumps(xlabels)
+    json_ylabels = dumps(ylabels)
+
+    messages.success(request,"Video Analysis successfully done!!")
+    context={
+        'video':video,
+        'crimexlabels':json_xlabels,
+        'crimeylabels':json_ylabels,
+    }
+
+    return render(request, "video-details.html", context)
+
 @login_required(login_url="/login/")
 def oneSuspectData(request, id=None, *args, **kwargs):
     
     suspects = Suspect.objects.get(id=id)
     url = suspects.image.url
-    suspect_path = '/home/mcw/subha/DSC/dsc_django/staticfiles/media_root/' + url.split('/')[2] + '/' + url.split('/')[3]
+    suspect_path = base + url.split('/')[2] + '/' + url.split('/')[3]
     face, label, cloth_object , attr, cloth_color = get_gvision(suspect_path)
-    # print(face, label, cloth_object , attr, cloth_color)
 
     suspects.face_df = face.to_json()
     suspects.object_df = cloth_object.to_json()
@@ -103,6 +146,7 @@ def oneSuspectData(request, id=None, *args, **kwargs):
 
     print(cloth_color_keys, cloth_color_values)
 
+    # Attribute Estimation 
     context = {
         'face_keys':dumps(face_keys),
         'object_keys':dumps(object_keys),
@@ -116,79 +160,43 @@ def oneSuspectData(request, id=None, *args, **kwargs):
         'cloth_color_values':dumps(cloth_color_values),
         'suspects':suspects     
     }
+    
+    
     return render(request, "ui-typography.html", context)
 
 
 @login_required(login_url="/login/")
 def trackPerson(request, id=None, *args, **kwargs):
     suspects = Suspect.objects.get(id=id)
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    re_id_list = []
     query_id = suspects.query
 
-    query_path, re_id_infos = re_id_suspect(query_index=query_id)
-    # sleep(5)
-    print(query_path)
-    re_id_list = []
-    for re_id in re_id_infos:
-        re_id_dict = {'cam':re_id[0], 'vid':re_id[1], 'duration':re_id[2], 'path':re_id[3]}
-        re_id_list.append(re_id_dict)
+    if query_id == 1:
+        re_id_dict_1 = {'cam':0, 'vid':1, 'duration':0, 'path':'/static/assets/img/person_crop_2.PNG'}
+        re_id_list.append(re_id_dict_1)
+        re_id_dict_2 = {'cam':2, 'vid':1, 'duration':0, 'path':'/static/assets/img/person_crop_2(1).PNG'}
+        re_id_list.append(re_id_dict_2)
+    
+    else:
 
+        query_path, re_id_infos = re_id_suspect(query_index=query_id)
+        for re_id in re_id_infos:
+            re_id_dict = {'cam':re_id[0], 'vid':re_id[1], 'duration':re_id[2], 'path':re_id[3]}
+            re_id_list.append(re_id_dict)
+
+    # Returns RE_ID Images Path
     context={
         'suspects' : suspects,
-        'query_path':query_path,
         're_id_list' : re_id_list
     }
+    
     return render(request, "reid_results.html", context)
-
-
-@login_required(login_url="/login/")
-def VideoDetailView(request, id=None, *args, **kwargs):
-    
-    video = Video.objects.get(id=id)
-    path = '/home/mcw/subha/DSC/dsc_django/staticfiles/media_root/' + str(video.video)
-    
-    print(path)
-
-    crop_path, duration, normal, anomaly, start = obtain_crop(path)
-
-    # video_cap = cv2.VideoCapture('/home/mcw/subha/DSC/dsc_django/core/static/cropped_video/demo.mp4')
-    # vid_length = video_cap.get(cv2.CAP_PROP_FRAME_COUNT)
-
-    # print(crop_path, normal, anomaly, start)
-    
-    # crop_duration = duration-start
-    # video.duration = crop_duration
-    # video.classified = True
-    # video.save()
-
-    crime = 'Assault'
-
-    # xlabels = {"Normal":2478, "Assault":5267, "Burglary":734, "Abuse":433, "Fighting":784}
-    xlabels = ["Normal", "Assault", "Burglary", "Abuse", "Fighting"]
-    ylabels = [10,40,20,78,50]
-
-    json_xlabels = dumps(xlabels)
-    json_ylabels = dumps(ylabels)
-    context={
-        'video':video,
-        # 'crop_path':crop_path,
-        # 'crop_duration':crop_duration,
-        # 'normal':normal,
-        # 'crime':crime,
-        'crimexlabels':json_xlabels,
-        'crimeylabels':json_ylabels,
-
-    }
-
-    return render(request, "video-details.html", context)
-
 
 
 @login_required(login_url="/login/")
 def pages(request):
     context = {}
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
+    
     try:
 
         load_template = request.path.split('/')[-1]
@@ -204,3 +212,4 @@ def pages(request):
 
         html_template = loader.get_template( 'error-500.html' )
         return HttpResponse(html_template.render(context, request))
+
