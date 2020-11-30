@@ -3,6 +3,9 @@
 
 DEEP SEE CRIME
 
+# Special Thanks
+>Thanks [Swarna Swapna](https://github.com/swarna97) for mentoring and supporting in Deep Learning model creation.
+
 # The Goal
 
 >Can state-of-the-art deep neural networks “See” violence in images and videos ??
